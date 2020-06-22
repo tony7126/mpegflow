@@ -1,12 +1,12 @@
 CFLAGS = -O3 -D__STDC_CONSTANT_MACROS
-LDFLAGS = -lswscale -lavdevice -lavformat -lavcodec -lswresample -lavutil -lpthread -lbz2 -lz -lc -lrt
-INSTALLED_DEPS = -Idependencies/include -Ldependencies/lib
+LDFLAGS = -lswscale -lavdevice -lavformat -lavcodec -lswresample -lavutil -lpthread -lbz2 -lz -lc
+INSTALLED_DEPS = -I/usr/local/include -L/usr/local/lib
 
 mpegflow: mpegflow.cpp
 	g++ $< -o $@ $(CFLAGS) $(LDFLAGS) $(INSTALLED_DEPS)
 
 vis: vis.cpp
-	g++ $< -o $@ $(CFLAGS) -lopencv_highgui -lopencv_videoio -lopencv_imgproc -lopencv_imgcodecs -lopencv_core -lpng $(LDFLAGS) $(INSTALLED_DEPS) 
+	g++ -std=c++11 $< -o $@ $(CFLAGS) -I/usr/local/Cellar/opencv/4.3.0/include/opencv4/opencv -I/usr/local/Cellar/opencv/4.3.0/include/opencv4 -L/usr/local/Cellar/opencv/4.3.0/lib -lopencv_highgui -lopencv_videoio -lopencv_imgproc -lopencv_imgcodecs -lopencv_core -lpng 
 
 mpegflow.exe : mpegflow.cpp
 	cl $? /MT /EHsc /I$(FFMPEG_DIR)\include /link avcodec.lib avformat.lib avutil.lib swscale.lib swresample.lib /LIBPATH:$(FFMPEG_DIR)\lib /OUT:$@

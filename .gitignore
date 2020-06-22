@@ -1,0 +1,6 @@
+mpegflow
+vis
+ffmpeg/
+.DS_Store
+*txt
+*mp4

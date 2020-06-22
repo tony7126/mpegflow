@@ -306,9 +306,19 @@ void output_vectors_std(int frameIndex, int64_t pts, char pictType, vector<AVMot
 
 	size_t gridStep = ARG_FORCE_GRID_8 ? 8 : 16;
 	pair<size_t, size_t> shape = make_pair(min(ffmpeg_frameHeight / gridStep, FrameInfo::MAX_GRID_SIZE), min(ffmpeg_frameWidth / gridStep, FrameInfo::MAX_GRID_SIZE));
-
+	/*fprintf(stderr, "pts: %lld prev pts: %lld\n", pts);
+		FrameInfo cur;
+	cur.FrameIndex = frameIndex;
+	cur.Pts = pts;
+	cur.Origin = "video";
+	cur.PictType = pictType;
+	cur.GridStep = gridStep;
+	cur.Shape = shape;
+	prev.push_back(cur);
+	return;*/
 	if(!prev.empty() && pts != prev.back().Pts + 1)
 	{
+		/*
 		for(int64_t dummy_pts = prev.back().Pts + 1; dummy_pts < pts; dummy_pts++)
 		{
 			FrameInfo dummy;
@@ -320,6 +330,7 @@ void output_vectors_std(int frameIndex, int64_t pts, char pictType, vector<AVMot
 			dummy.Shape = shape;
 			prev.push_back(dummy);
 		}
+		*/
 	}
 
 	FrameInfo cur;
@@ -413,14 +424,16 @@ int main(int argc, const char* argv[])
 				fprintf(stderr, "Skipping frame %d (frame with pts %d already processed).\n", int(frameIndex), int(pts));
 			continue;
 		}
-
+		
 		if(ARG_OUTPUT_RAW_MOTION_VECTORS)
 			output_vectors_raw(frameIndex, pts, pictType, motionVectors);
 		else
 			output_vectors_std(frameIndex, pts, pictType, motionVectors);
-
+		
 		prev_pts = pts;
 	}
+	
 	if(ARG_OUTPUT_RAW_MOTION_VECTORS == false)
 		output_vectors_std(-1, pts, pictType, motionVectors);
+	
 }
